@@ -67,6 +67,7 @@ export default function WorldMap({
           onMoveEnd={setPosition}
           minZoom={MIN_ZOOM}
           maxZoom={MAX_ZOOM}
+          translateExtent={[[0, 0], [800, 600]]}
         >
           <Geographies geography={topology || GEO_URL} key="world">
             {({ geographies }) =>
