@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from '@tanstack/react-router'
 import countries from 'i18n-iso-countries'
 import enLocale from 'i18n-iso-countries/langs/en.json'
 
@@ -97,7 +97,7 @@ export default function Sidebar({ collapsed, onToggle, onHoverCountry, disabled 
               key={c.alpha2}
               onMouseEnter={disabled ? undefined : () => onHoverCountry(c.alpha2)}
               onMouseLeave={disabled ? undefined : () => onHoverCountry(null)}
-              onClick={disabled ? undefined : () => navigate(`/country/${c.alpha2}`)}
+              onClick={disabled ? undefined : () => navigate({ to: '/country/$alpha2', params: { alpha2: c.alpha2 } })}
               style={{
                 display: 'flex',
                 alignItems: 'center',

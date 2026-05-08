@@ -1,14 +1,16 @@
 import { useEffect } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { getRouteApi, useNavigate } from '@tanstack/react-router'
 import countries from 'i18n-iso-countries'
 import enLocale from 'i18n-iso-countries/langs/en.json'
 
 countries.registerLocale(enLocale)
 
+const route = getRouteApi('/country/$alpha2')
+
 export default function CountryModal() {
-  const { alpha2 } = useParams()
+  const { alpha2 } = route.useParams()
   const navigate = useNavigate()
-  const close = () => navigate('/')
+  const close = () => navigate({ to: '/' })
 
   useEffect(() => {
     const onKey = (e) => {
