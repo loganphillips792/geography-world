@@ -1,9 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
-import { Route, Routes } from 'react-router-dom'
+import { Outlet } from '@tanstack/react-router'
 import WorldMap from './WorldMap.jsx'
 import Sidebar from './Sidebar.jsx'
-import CountryModal from './CountryModal.jsx'
-import StateModal from './StateModal.jsx'
 import Game from './Game.jsx'
 import GameButton from './GameButton.jsx'
 import Settings from './Settings.jsx'
@@ -137,10 +135,7 @@ export default function App() {
         onHoverCountry={setHighlighted}
         disabled={gameActive}
       />
-      <Routes>
-        <Route path="/country/:alpha2" element={<CountryModal />} />
-        <Route path="/state/:stateCode" element={<StateModal />} />
-      </Routes>
+      <Outlet />
     </div>
   )
 }

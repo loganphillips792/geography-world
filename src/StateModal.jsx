@@ -1,11 +1,13 @@
 import { useEffect } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { getRouteApi, useNavigate } from '@tanstack/react-router'
 import { getStateByPostal } from './lib/states.js'
 
+const route = getRouteApi('/state/$stateCode')
+
 export default function StateModal() {
-  const { stateCode } = useParams()
+  const { stateCode } = route.useParams()
   const navigate = useNavigate()
-  const close = () => navigate('/')
+  const close = () => navigate({ to: '/' })
 
   useEffect(() => {
     const onKey = (e) => {

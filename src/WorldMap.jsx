@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from '@tanstack/react-router'
 import { ComposableMap, Geographies, Geography, ZoomableGroup } from 'react-simple-maps'
 import { countries, resolveAlpha2 } from './lib/countries.js'
 import { getStateByFips } from './lib/states.js'
@@ -98,7 +98,7 @@ export default function WorldMap({
                       if (gameActive) {
                         onCountryClick?.(alpha2)
                       } else {
-                        navigate(`/country/${alpha2}`)
+                        navigate({ to: '/country/$alpha2', params: { alpha2 } })
                       }
                     }}
                     style={{
@@ -138,7 +138,7 @@ export default function WorldMap({
                         if (gameActive) {
                           onStateClick?.(state?.postal)
                         } else if (state) {
-                          navigate(`/state/${state.postal}`)
+                          navigate({ to: '/state/$stateCode', params: { stateCode: state.postal } })
                         }
                       }}
                       style={{
