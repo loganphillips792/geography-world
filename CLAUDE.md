@@ -14,7 +14,7 @@ There are no tests, no linter, and no typecheck step configured.
 
 Vite + React 18 SPA. Key runtime dependencies:
 - **react-simple-maps** — map rendering (TopoJSON + D3); supports nested `<Geographies>` layers inside one `<ZoomableGroup>`
-- **react-router-dom v7** — `BrowserRouter`; both `/country/:alpha2` and `/state/:stateCode` are shareable URLs
+- **@tanstack/react-router** — file-based routing via `@tanstack/router-plugin` (Vite plugin generates `src/routeTree.gen.ts` from `src/routes/`). Both `/country/$alpha2` and `/state/$stateCode` are shareable URLs
 - **i18n-iso-countries** — alpha-2 ↔ numeric ↔ English-name lookups
 - **countries-list** — alpha-2 → continent code (used for the country game's continent filter)
 - **flagcdn.com** — country flag images by alpha-2 (`w40` tooltip/sidebar, `w80` game banner, `w160` modal). No state flags.
@@ -42,7 +42,13 @@ Routes mirror this: `/country/:alpha2` and `/state/:stateCode`. When adding feat
 
 ### Routes and modals
 
-`App.jsx` always renders `<WorldMap>`, `<Sidebar>`, and the floating buttons. A `<Routes>` block conditionally renders `<CountryModal>` or `<StateModal>` as an **overlay** (not a separate page) so map zoom/pan, prefetched flags, and game state survive modal open/close. Modals close by navigating to `/`, not `navigate(-1)` — direct-link visitors get the map underneath, not an empty history stack.
+Routes are file-based in `src/routes/`:
+- `__root.jsx` — root route, component is `App`
+- `index.jsx` — `/`, renders nothing (map is always visible via the root layout)
+- `country.$alpha2.jsx` — `/country/$alpha2`, renders `<CountryModal>`
+- `state.$stateCode.jsx` — `/state/$stateCode`, renders `<StateModal>`
+
+The generated `src/routeTree.gen.ts` is consumed by `createRouter({ routeTree })` in `main.jsx`. `App.jsx` always renders `<WorldMap>`, `<Sidebar>`, and the floating buttons, and places `<Outlet />` for the active child route. The modal routes render as an **overlay** (not a separate page) so map zoom/pan, prefetched flags, and game state survive modal open/close. Modals close by `navigate({ to: '/' })`, not back-navigation — direct-link visitors get the map underneath, not an empty history stack. Route params are read via `getRouteApi('/country/$alpha2').useParams()` / `'/state/$stateCode'`.
 
 ### US states as a second `<Geographies>` layer
 
@@ -78,4 +84,4 @@ All styles are inline (no CSS file beyond `src/index.css` for resets). Dark pale
 
 ## Deployment note
 
-`BrowserRouter` requires the host to fall back to `index.html` for unknown paths so `/country/jp` and `/state/ca` direct-loads work in production. Vite's dev server does this automatically. A static host (Vercel, Netlify, GitHub Pages) needs an SPA rewrite rule before deploy.
+TanStack Router uses HTML5 history by default, so the host must fall back to `index.html` for unknown paths for `/country/jp` and `/state/ca` direct-loads to work in production. Vite's dev server does this automatically. A static host (Vercel, Netlify, GitHub Pages) needs an SPA rewrite rule before deploy.
