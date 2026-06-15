@@ -1,9 +1,6 @@
 import { useMemo, useState } from 'react'
 import { useNavigate } from '@tanstack/react-router'
-import countries from 'i18n-iso-countries'
-import enLocale from 'i18n-iso-countries/langs/en.json'
-
-countries.registerLocale(enLocale)
+import { countries, getCountryName } from './lib/countries.js'
 
 export default function Sidebar({ collapsed, onToggle, onHoverCountry, disabled = false }) {
   const navigate = useNavigate()
@@ -12,7 +9,10 @@ export default function Sidebar({ collapsed, onToggle, onHoverCountry, disabled 
   const list = useMemo(() => {
     const names = countries.getNames('en')
     return Object.entries(names)
-      .map(([alpha2, name]) => ({ alpha2: alpha2.toLowerCase(), name }))
+      .map(([alpha2, name]) => ({
+        alpha2: alpha2.toLowerCase(),
+        name: getCountryName(alpha2, name),
+      }))
       .sort((a, b) => a.name.localeCompare(b.name))
   }, [])
 

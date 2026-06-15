@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from '@tanstack/react-router'
 import { ComposableMap, Geographies, Geography, ZoomableGroup } from 'react-simple-maps'
-import { countries, resolveAlpha2 } from './lib/countries.js'
+import { countries, resolveAlpha2, getCountryName } from './lib/countries.js'
 import { getStateByFips } from './lib/states.js'
 
 const GEO_URL = 'https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json'
@@ -73,7 +73,7 @@ export default function WorldMap({
             {({ geographies }) =>
               geographies.map((geo) => {
                 const alpha2 = resolveAlpha2(geo)
-                const name = geo.properties.name
+                const name = getCountryName(alpha2, geo.properties.name)
                 const isHighlighted = !gameActive && alpha2 && alpha2 === highlightedAlpha2
                 const isFeedback = alpha2 && alpha2 === feedbackAlpha2
                 let baseFill = '#1f2937'

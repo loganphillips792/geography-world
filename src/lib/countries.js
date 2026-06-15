@@ -27,6 +27,19 @@ export const NAME_OVERRIDES = {
   Somaliland: 'so',
 }
 
+// Display-name overrides keyed by alpha-2, applied on top of i18n-iso-countries
+// and topology names so the app shows the country's preferred endonym.
+const DISPLAY_NAME_OVERRIDES = {
+  tr: 'Türkiye',
+}
+
+export function getCountryName(alpha2, fallback = null) {
+  if (!alpha2) return fallback
+  const code = alpha2.toLowerCase()
+  if (DISPLAY_NAME_OVERRIDES[code]) return DISPLAY_NAME_OVERRIDES[code]
+  return countries.getName(code.toUpperCase(), 'en') || fallback
+}
+
 export function resolveAlpha2(geo) {
   const numericId = String(geo.id).padStart(3, '0')
   const fromNumeric = countries.numericToAlpha2(numericId)?.toLowerCase()
@@ -40,7 +53,7 @@ export function extractCountriesFromTopology(topology) {
   return geoms
     .map((g) => {
       const alpha2 = resolveAlpha2(g)
-      return { alpha2, name: g.properties.name, continent: getContinent(alpha2) }
+      return { alpha2, name: getCountryName(alpha2, g.properties.name), continent: getContinent(alpha2) }
     })
     .filter((c) => c.alpha2)
     .sort((a, b) => a.name.localeCompare(b.name))
