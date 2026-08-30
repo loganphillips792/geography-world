@@ -78,6 +78,20 @@ List all tags/versions of a specific image:
 gh api "user/packages/container/geography-world/versions" --jq '.[].metadata.container.tags'
 ```
 
+### Deleting a pushed image
+
+The `gh` token needs the `delete:packages` scope — grant it once (interactive):
+
+```sh
+gh auth refresh -h github.com -s delete:packages
+```
+
+Delete the entire package (all tags/versions) from GHCR:
+
+```sh
+gh api -X DELETE user/packages/container/geography-world
+```
+
 ## Country identifiers
 
 The app uses **ISO 3166-1 alpha-2** as the canonical country ID (e.g. `us`, `fr`, `xk`),
