@@ -51,6 +51,33 @@ docker pull ghcr.io/loganphillips792/geography-world:latest
 The package is **private by default** after the first push. To allow unauthenticated
 pulls, open the package on GitHub → Package settings → Change visibility → Public.
 
+### Viewing pushed images
+
+Images are pushed to GHCR as `ghcr.io/loganphillips792/geography-world` (private).
+
+**Web UI:**
+
+- GHCR: https://github.com/loganphillips792?tab=packages (or the "Packages" section on the repo page)
+- Docker Hub: https://hub.docker.com/u/<your-username>
+
+**CLI:** the `gh` token needs the `read:packages` scope — grant it once (interactive):
+
+```sh
+gh auth refresh -h github.com -s read:packages
+```
+
+List all pushed container images:
+
+```sh
+gh api "user/packages?package_type=container" --jq '.[].name'
+```
+
+List all tags/versions of a specific image:
+
+```sh
+gh api "user/packages/container/geography-world/versions" --jq '.[].metadata.container.tags'
+```
+
 ## Country identifiers
 
 The app uses **ISO 3166-1 alpha-2** as the canonical country ID (e.g. `us`, `fr`, `xk`),
