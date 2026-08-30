@@ -1,5 +1,83 @@
 # geography-world
 
+## Docker
+
+Build the image:
+
+```sh
+docker build -t geography-world .
+```
+
+Run the container (serves on http://localhost:8080):
+
+```sh
+docker run --rm -p 8080:80 geography-world
+```
+
+### Pushing to GitHub Container Registry
+
+CI (`.github/workflows/docker.yml`) builds and pushes `ghcr.io/loganphillips792/geography-world`
+automatically on every push to `main` (tagged `latest`, `main`, and `sha-<short>`) and on
+`v*` git tags (tagged with the version). Pull requests only build; they don't push.
+
+To push manually from your machine, create a
+[personal access token (classic)](https://github.com/settings/tokens/new?scopes=write:packages)
+with the `write:packages` scope, then:
+
+```sh
+# Log in (paste the token when prompted, or pipe it in)
+echo "$GHCR_TOKEN" | docker login ghcr.io -u loganphillips792 --password-stdin
+
+# Build and tag
+docker build -t ghcr.io/loganphillips792/geography-world:latest .
+
+# Push
+docker push ghcr.io/loganphillips792/geography-world:latest
+```
+
+To push an additional version tag alongside `latest`:
+
+```sh
+docker tag ghcr.io/loganphillips792/geography-world:latest ghcr.io/loganphillips792/geography-world:1.0.0
+docker push ghcr.io/loganphillips792/geography-world:1.0.0
+```
+
+Pull it anywhere with:
+
+```sh
+docker pull ghcr.io/loganphillips792/geography-world:latest
+```
+
+The package is **private by default** after the first push. To allow unauthenticated
+pulls, open the package on GitHub → Package settings → Change visibility → Public.
+
+### Viewing pushed images
+
+Images are pushed to GHCR as `ghcr.io/loganphillips792/geography-world` (private).
+
+**Web UI:**
+
+- GHCR: https://github.com/loganphillips792?tab=packages (or the "Packages" section on the repo page)
+- Docker Hub: https://hub.docker.com/u/<your-username>
+
+**CLI:** the `gh` token needs the `read:packages` scope — grant it once (interactive):
+
+```sh
+gh auth refresh -h github.com -s read:packages
+```
+
+List all pushed container images:
+
+```sh
+gh api "user/packages?package_type=container" --jq '.[].name'
+```
+
+List all tags/versions of a specific image:
+
+```sh
+gh api "user/packages/container/geography-world/versions" --jq '.[].metadata.container.tags'
+```
+
 ## Country identifiers
 
 The app uses **ISO 3166-1 alpha-2** as the canonical country ID (e.g. `us`, `fr`, `xk`),
