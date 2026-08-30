@@ -1,9 +1,6 @@
 import { useEffect } from 'react'
 import { getRouteApi, useNavigate } from '@tanstack/react-router'
-import countries from 'i18n-iso-countries'
-import enLocale from 'i18n-iso-countries/langs/en.json'
-
-countries.registerLocale(enLocale)
+import { getCountryName } from './lib/countries.js'
 
 const route = getRouteApi('/country/$alpha2')
 
@@ -21,7 +18,7 @@ export default function CountryModal() {
   }, [])
 
   const code = alpha2?.toLowerCase()
-  const name = code ? countries.getName(code.toUpperCase(), 'en') : null
+  const name = code ? getCountryName(code) : null
   const found = Boolean(name)
 
   return (
